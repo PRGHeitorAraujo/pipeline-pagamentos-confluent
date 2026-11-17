@@ -1,0 +1,15 @@
+### Teardown — 17/11/2026 ~18:05 UTC, pelos consoles (ordem importa)
+1. Flink: 9 statements apagados (Actions > Delete statement, confirmação "DELETE")
+2. Conector pg-payments-cdc (lcc-v7wzj8j) apagado — antes do slot, porque slot ativo não pode ser removido
+3. Neon SQL Editor:
+   SELECT pg_drop_replication_slot(slot_name) FROM pg_replication_slots
+     WHERE slot_name = 'payments_slot' AND NOT active;          -> 1 linha (slot removido)
+   DROP PUBLICATION IF EXISTS payments_pub;                     -> DROP
+   SELECT slot_name, slot_type FROM pg_replication_slots;
+     wal_proposer_slot  physical   <- internos do Neon, não são do pipeline
+     wal_retention_slot physical
+   publicações restantes: 0
+4. Cluster payments-cluster (lkc-6k61rnq) apagado -> tópicos e API key do leitor vão junto
+5. Compute pool Flink AWS.us-east-1.env-v9x3q0.ef42 apagado ("You don't have any compute pools")
+6. Service accounts sa-payments-writer e sa-payments-reader apagadas
+Sobrou: o ambiente "default" (vazio) e o projeto Neon no plano Free (sem slot, a compute volta a dormir).
