@@ -1,0 +1,10 @@
+### Fundação  (2026-11-17 17:06:43 UTC) — criado pelo Console do Confluent Cloud
+Organização ......... Bangalô Imóveis (trial, sem cartão; promo code CONFLUENTDEV1)
+Ambiente ............ env-v9x3q0 (padrão)
+Cluster ............. payments-cluster  lkc-6k61rnq  Basic  AWS us-east-1  status: Executando
+Bootstrap ........... pkc-oxqxx9.us-east-1.aws.confluent.cloud:9092
+
+### Service accounts
+ID           Nome                 Descrição
+sa-gk25yzr   sa-payments-writer   Escreve: conector CDC Postgres -> tópicos pg.*
+sa-6onyx58   sa-payments-reader   Le: apenas o topico fraud_alerts

@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "FraudAlert",
+  "namespace": "br.dio.payments",
+  "doc": "v3 PROPOSITALMENTE QUEBRADA: txn_count muda de long para string e risk_score entra sem default. O Schema Registry tem que recusar.",
+  "fields": [
+    {"name": "alert_id",       "type": ["null", "string"], "default": null},
+    {"name": "rule_id",        "type": ["null", "string"], "default": null},
+    {"name": "card_id",        "type": ["null", "string"], "default": null},
+    {"name": "account_id",     "type": ["null", "int"],    "default": null},
+    {"name": "trigger_txn_id", "type": ["null", "long"],   "default": null},
+    {"name": "txn_count",      "type": "string"},
+    {"name": "total_amount",   "type": ["null", "double"], "default": null},
+    {"name": "window_start",   "type": ["null", {"type": "long", "logicalType": "timestamp-millis"}], "default": null},
+    {"name": "alert_time",     "type": ["null", {"type": "long", "logicalType": "timestamp-millis"}], "default": null},
+    {"name": "severity",       "type": ["null", "string"], "default": null},
+    {"name": "risk_score",     "type": "double"}
+  ]
+}

@@ -1,0 +1,16 @@
+### Saúde dos componentes  (17/11/2026 ~17:53 UTC) — Console do Confluent Cloud
+Conector   pg-payments-cdc  lcc-v7wzj8j  Running  Source  PostgresCdcSourceV2  tasks=1  ~12 B/s
+Flink      4 statements INSERT Running (txn_events, enriquecimento, regra 1, regra 2) — compute pool lfcp-386mxkj
+           enriquecimento: "0 messages behind | 12 per min in | Watermark: Up to Date (saída)"
+
+### Tópicos (Console > Topics)            partições  produção  consumo  retido
+pg.public.accounts                           1          0 B/s     –        11.91 KB
+pg.public.transactions                       1          19 B/s    19 B/s   6.41 KB
+txn_events                                   1          14 B/s    28 B/s   3.50 KB
+transactions_enriched                        1          25 B/s    –        3.23 KB
+fraud_alerts                                 1          –         –        5 msgs (4 alertas + 1 marcador de commit)
+
+### Acesso: quem pode o quê
+sa-payments-writer (sa-gk25yzr): ACL cluster DESCRIBE + tópicos prefixo pg* CREATE, WRITE  (usada pelo conector)
+sa-payments-reader (sa-6onyx58): criada SEM nenhuma permissão (nem pg.*, nem fraud_alerts). ACL de leitura + API key ficam para quando o consumidor rodar
+Statements do Flink: rodam com a conta do usuário (Heitor) — próximo passo: service account própria

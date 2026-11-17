@@ -1,0 +1,7 @@
+### Custo (Console > Billing and payment > Rewards), 17/11/2026 ~17:54 UTC
+Crédito do trial ............ US$ 400 / US$ 400 restantes (29 dias)
+Código CONFLUENTDEV1 ........ US$ 1 / US$ 1 (30 dias) — dispensou o cartão de crédito
+Forma de pagamento .......... NENHUMA cadastrada -> fim do trial suspende a org, não cobra
+Neon ........................ plano Free (sem cartão)
+Gasto real em dinheiro ...... R$ 0,00
+Obs.: o billing do Confluent consolida com algumas horas de atraso; o consumo de crédito do dia aparece depois.

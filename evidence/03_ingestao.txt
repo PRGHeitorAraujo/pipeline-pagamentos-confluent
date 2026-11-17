@@ -1,0 +1,30 @@
+### Pré-requisitos do banco para CDC  (2026-11-17 16:59:17 UTC)
+# Executado no Neon SQL Editor (projeto pipeline-pagamentos-db, AWS us-east-1)
+$ SELECT current_setting('wal_level'), rolreplication, tabelas publicadas, count(accounts)
+wal_level | pode_replicar | tabelas_publicadas      | contas
+logical   | t             | accounts, transactions  | 50
+
+### Conector  — Console do Confluent Cloud
+pg-payments-cdc  (PostgresCdcSourceV2, Debezium 3.2.5.Final)  status: RUNNING ("pg-payments-cdc is now running")
+kafka.auth.mode=SERVICE_ACCOUNT  kafka.service.account.id=sa-gk25yzr (sa-payments-writer)
+ACLs criadas para sa-payments-writer: cluster DESCRIBE | tópicos pg* CREATE, WRITE
+output.data.format=AVRO  output.key.format=AVRO  after.state.only=false  tombstones.on.delete=false
+slot.name=payments_slot  publication.name=payments_pub  publication.autocreate.mode=disabled
+table.include.list=public.accounts,public.transactions  decimal.handling.mode=double  snapshot.mode=initial
+Tópicos criados: pg.public.accounts (53 mensagens = 50 do snapshot + 3 da demo), pg.public.transactions
+
+### Demo no Neon SQL Editor (17/11/2026 ~17:39 UTC)
+INSERT INTO accounts (...) VALUES ('Conta Demo CDC','standard','Recife','low',2500);   -> INSERT 1
+UPDATE accounts SET segment='premium', home_city='Olinda' WHERE holder_name='Conta Demo CDC'; -> UPDATE 1
+DELETE FROM accounts WHERE holder_name='Conta Demo CDC';                               -> DELETE 1
+
+### Eventos no tópico pg.public.accounts (Message viewer, filtro "Conta Demo CDC")
+offset 50  key {"account_id":51}  op="c"  before=null
+  after={"account_id":51,"holder_name":"Conta Demo CDC","segment":"standard","home_city":"Recife","risk_tier":"low","credit_limit":2500}
+  source={"connector":"postgresql","db":"neondb","table":"accounts","txId":2055,"lsn":29091216,"ts_ms":1794937143125}
+offset 51  key {"account_id":51}  op="u"
+  before={"segment":"standard","home_city":"Recife",...}  after={"segment":"premium","home_city":"Olinda",...}
+  source={"txId":2056,"lsn":29091520}
+offset 52  key {"account_id":51}  op="d"  after=null
+  before={"account_id":51,"holder_name":"Conta Demo CDC","segment":"premium","home_city":"Olinda",...}
+  source={"txId":2057,"lsn":29091784,"ts_ms":1794937149851}
